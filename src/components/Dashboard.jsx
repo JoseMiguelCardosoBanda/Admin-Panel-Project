@@ -52,15 +52,18 @@ function Dashboard() {
 
   async function updateUser(newStatus) {
     const usersLength = selectedUser.response;
+    const modal = document.getElementById("staticBackdrop");
     for (let x = 0; x < usersLength.length; x++) {
       if (usersLength[x] == id && newStatus === "Blocked") {
-        alert("The Current User Will Be Blocked. \nThe Page Will Reload.");
-        await axios.post("https://admin-panel-backend-five.vercel.app/update", {
-          id: usersLength[x],
-          status: newStatus,
+        showModal("The Current User Will Be Blocked. \nThe Page Will Reload.");
+        modal.addEventListener("hidden.bs.modal", () => {
+          axios.post("https://admin-panel-backend-five.vercel.app/update", {
+            id: usersLength[x],
+            status: newStatus,
+          });
+          navigate("/");
+          setLogin(false);
         });
-        navigate("/");
-        setLogin(false);
       } else {
         await axios.post("https://admin-panel-backend-five.vercel.app/update", {
           id: usersLength[x],
@@ -73,12 +76,16 @@ function Dashboard() {
 
   async function deleteUser() {
     const usersLength = selectedUser.response;
+    const modal = document.getElementById("staticBackdrop");
     for (let y = 0; y < usersLength.length; y++) {
       if (usersLength[y] == id) {
-        alert("The Current User Will Be Deleted. \nThe Page Will Reload.");
-        window.location.reload();
-        await axios.post("https://admin-panel-backend-five.vercel.app/delete", {
-          id: usersLength[y],
+        showModal("The Current User Will Be Deleted. \nThe Page Will Reload.");
+        modal.addEventListener("hidden.bs.modal", () => {
+          axios.post("https://admin-panel-backend-five.vercel.app/delete", {
+            id: usersLength[y],
+          });
+          navigate("/");
+          setLogin(false);
         });
       } else {
         await axios.post("https://admin-panel-backend-five.vercel.app/delete", {
@@ -88,6 +95,15 @@ function Dashboard() {
       }
     }
     getUsers();
+  }
+
+  function showModal(message) {
+    const createModal = new bootstrap.Modal(
+      document.getElementById("staticBackdrop")
+    );
+    const modalBody = document.getElementById("modalB");
+    modalBody.innerHTML = message;
+    createModal.show();
   }
 
   const getUsers = async () => {
@@ -171,7 +187,7 @@ function Dashboard() {
                         type="checkbox"
                         name={user.id}
                         value={user.id}
-                        id="flexCheckDefault"
+                        id={user.id}
                         onChange={handleChange}
                       />
                     </div>
@@ -185,6 +201,43 @@ function Dashboard() {
               ))}
             </tbody>
           </table>
+          <div
+            className="modal fade"
+            id="staticBackdrop"
+            data-bs-backdrop="static"
+            data-bs-keyboard="false"
+            tabIndex="-1"
+            aria-labelledby="staticBackdropLabel"
+          >
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1
+                    className="modal-title fs-5 text-dark"
+                    id="staticBackdropLabel"
+                  >
+                    Attention!!
+                  </h1>
+                  <button
+                    type="button"
+                    className="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div id="modalB" className="modal-body text-dark"></div>
+                <div className="modal-footer">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    data-bs-dismiss="modal"
+                  >
+                    Understood
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </>
       ) : (
         navigate("/")
