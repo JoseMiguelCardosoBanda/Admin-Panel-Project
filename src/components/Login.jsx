@@ -110,7 +110,9 @@ function Login() {
               <br />
               <p className="text-sm text-center">
                 Not Registered Yet?{" "}
-                <NavLink to="/register">Register Here</NavLink>
+                <NavLink to="/register" style={{ color: "white" }}>
+                  Register Here
+                </NavLink>
               </p>
             </div>
             <div className="toast-container position-fixed bottom-0 end-0 p-3">
