@@ -1,7 +1,7 @@
 # React + Vite - Admin Panel
 
 To initialize the app use 'npm run dev'.
-This project was made with React.js and Bootstrap.
+\nThis project was made with React.js and Bootstrap.
 
 * At first the welcome page will be shown.
 
